@@ -1,4 +1,4 @@
-package com.neeto.banknotedetector.components
+package com.neeto.banknotedetector.data
 
 import android.content.Intent
 import android.net.Uri

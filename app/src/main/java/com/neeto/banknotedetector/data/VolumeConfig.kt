@@ -1,13 +1,10 @@
-package com.neeto.banknotedetector.components
+package com.neeto.banknotedetector.data
 
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioManager
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView

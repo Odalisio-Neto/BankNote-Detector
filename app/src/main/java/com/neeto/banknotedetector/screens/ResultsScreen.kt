@@ -1,10 +1,12 @@
 package com.neeto.banknotedetector.screens
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,13 +20,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.neeto.banknotedetector.data.Classification
 import com.neeto.banknotedetector.router.AppRouter
 import com.neeto.banknotedetector.router.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResultsScreen() {
+fun ResultsScreen(
+    classifications : List<Classification>?
+) {
     rememberCoroutineScope()
 
     Scaffold(
@@ -61,26 +68,22 @@ fun ResultsScreen() {
         Column (modifier = Modifier.padding(innerPadding),
             verticalArrangement = Arrangement.Center
         ){
-            Text("Results 1")
-            Text("Results 2")
-            Text("Results 3")
-            Text("Results 4")
-            Text("Results 5")
-            Text("Results 6")
-            Text("Results 7")
-            Text("Results 8")
+            classifications?.forEach {
+                Text(
+                    text = it.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(8.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
+            }
         }
 
 
 
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewResults()
-{
-    ResultsScreen()
 }
 
 

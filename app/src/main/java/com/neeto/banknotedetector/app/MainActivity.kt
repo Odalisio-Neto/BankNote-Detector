@@ -23,7 +23,7 @@ fun BankNoteApp() {
         ) {
             when(it.value){
                 Screen.Home -> MainScreen()
-                Screen.ResultsScreen -> ResultsScreen()
+                Screen.ResultsScreen -> ResultsScreen(null)
             }
         }
     }
