@@ -5,10 +5,7 @@ package com.neeto.banknotedetector.screens
 
 
 import CameraUsage
-import android.app.Activity
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
-import android.util.Log
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -16,43 +13,49 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.neeto.banknotedetector.router.AppRouter
-import com.neeto.banknotedetector.router.Screen
-import kotlinx.coroutines.CoroutineScope
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.neeto.banknotedetector.app.MainViewModel
-import com.neeto.banknotedetector.data.LockVolumeButtons
-import com.neeto.banknotedetector.data.OpenLinkInBrowser
 import com.neeto.banknotedetector.components.PhotoSheetContent
 import com.neeto.banknotedetector.data.Classification
-import com.neeto.banknotedetector.data.ImageAnalyser
-import com.neeto.banknotedetector.data.TFLiteClassifier
+import com.neeto.banknotedetector.data.OpenLinkInBrowser
+import com.neeto.banknotedetector.router.AppRouter
+import com.neeto.banknotedetector.router.Screen
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MainScreen() {
 
     val scope  = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState()
-    val isPortrait = LocalContext.current
-        .resources
-        .configuration
-        .orientation == Configuration.ORIENTATION_PORTRAIT
+
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    val scaffoldState = rememberBottomSheetScaffoldState(snackbarHostState = snackbarHostState)
 
 
     val viewModel = viewModel<MainViewModel>()
@@ -60,10 +63,10 @@ fun MainScreen() {
 
     val context = LocalContext.current
 
-    var classifications by remember {
-        mutableStateOf(emptyList<Classification>())
-    }
-    val classifier = TFLiteClassifier (context = context)
+    val listImagesResult = mutableListOf<Bitmap>()
+    val listOfClassifications = mutableListOf<List<Classification>>()
+
+
 
 
     BottomSheetScaffold(
@@ -76,12 +79,13 @@ fun MainScreen() {
             PhotoSheetContent(
                 bitmaps,
                 modifier = Modifier.fillMaxWidth(),
-                classifier = classifier,
-            ){
-                newClassifications ->
-                classifications = newClassifications
-            }
-            Log.i("CLASSIFICATION : ", classifications.toString())
+                updateImagesResult = {
+                    listImagesResult.add(it)
+                },
+                updateClassifications = {
+                    listOfClassifications.add(it)
+                }
+            )
 
         },
         sheetPeekHeight = 0.dp,
@@ -128,7 +132,10 @@ fun MainScreen() {
                     }
                 }
                 Screen.ResultsScreen -> {
-                    ResultsScreen( classifications )
+                    ResultsScreen(
+                        listImagesResult,
+                        listOfClassifications
+                    )
                 }
             }
         }

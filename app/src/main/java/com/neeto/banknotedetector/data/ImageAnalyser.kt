@@ -13,7 +13,7 @@ class ImageAnalyser(
         val rotationDegreesValue = image.imageInfo.rotationDegrees
         val bitmap = image
             .toBitmap()
-            .centercrop(desiredHeight = 128, desiredWidth = 154) //from pretrained model (Xtrain.shape)
+            .resize(desiredHeight = 128, desiredWidth = 154) //from pretrained model (Xtrain.shape)
 
         val results = classifier.classify(bitmap, rotationDegreesValue)
         onResult(results)

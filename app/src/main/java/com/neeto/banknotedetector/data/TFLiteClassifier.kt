@@ -2,8 +2,8 @@ package com.neeto.banknotedetector.data
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.Surface
-import android.view.SurfaceControl.TrustedPresentationThresholds
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
@@ -13,13 +13,13 @@ import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 
 class TFLiteClassifier(
     private val context : Context,
-    private val threshold : Float = 0.7f,
-    private val maxResults : Int = 1
+    private val threshold : Float = 0.1f,
+    private val maxResults : Int = 5
 ) : Classifier {
 
-    private var classifier: ImageClassifier? = null
+    var classifier: ImageClassifier? = null
 
-    private fun setupClassifier(){
+    fun setupClassifier(){
         val baseOptions = BaseOptions
             .builder()
             .setNumThreads(2)
@@ -44,10 +44,22 @@ class TFLiteClassifier(
             e.printStackTrace()
         }
     }
+    fun getCategoryValue(index: Int): String {
+        return when (index) {
+            1 -> "2"
+            2 -> "5"
+            3 -> "10"
+            4 -> "20"
+            5 -> "50"
+            else -> "0"
+        }
+    }
     override fun classify(bitmap: Bitmap, rotation: Int): List<Classification> {
-        if (classifier ==null){
+        if (classifier == null){
             setupClassifier()
         }
+
+        Log.i("CLASSIFIER", "getMaxResults : ${classifier}")
         val imageProcessor = ImageProcessor.Builder().build()
 
         val image = imageProcessor.process(TensorImage.fromBitmap(bitmap))
@@ -58,22 +70,29 @@ class TFLiteClassifier(
             .build()
 
 
-        var results = classifier?.classify(image, imageProcessingOptions)
+        val results = classifier?.classify(image, imageProcessingOptions)
+        Log.i("CLASSIFIER", "results : ${results}")
 
-        return results?.flatMap {
-            classifications ->
-                classifications.categories.map {
+        val list = results?.flatMap {
+                classifications ->
+            classifications.categories.map {
                     category ->
-                        Classification(
-                            name = category.displayName,
-                            score = category.score
-                        )
-                }
+                Classification(
+                    name = getCategoryValue(category.index),
+                    score = category.score
+                )
+            }
         }?.distinctBy { it.name } ?: emptyList()
+
+        Log.i("CLASSIFIER", "results_list : ${list}")
+
+
+
+        return list
 
     }
 
-    fun getOrientation(rotation: Int) : ImageProcessingOptions.Orientation{
+    private fun getOrientation(rotation: Int) : ImageProcessingOptions.Orientation{
         return when(rotation){
             Surface.ROTATION_0 -> ImageProcessingOptions.Orientation.RIGHT_TOP
             Surface.ROTATION_90 -> ImageProcessingOptions.Orientation.TOP_LEFT

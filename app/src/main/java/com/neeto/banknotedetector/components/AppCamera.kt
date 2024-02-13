@@ -1,64 +1,55 @@
 //import com.google.accompanist.permissions.rememberPermissionState
 import android.Manifest
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Matrix
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Surface
 import androidx.camera.core.ImageCapture.OnImageCapturedCallback
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.neeto.banknotedetector.R
-import com.neeto.banknotedetector.components.CameraPreview
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
+import com.neeto.banknotedetector.R
 import com.neeto.banknotedetector.app.MainViewModel
-import com.neeto.banknotedetector.data.Classification
-import com.neeto.banknotedetector.data.ImageAnalyser
-import com.neeto.banknotedetector.data.TFLiteClassifier
+import com.neeto.banknotedetector.components.CameraPreview
+import com.neeto.banknotedetector.data.rotate
 import com.neeto.banknotedetector.router.AppRouter
 import com.neeto.banknotedetector.router.Screen
 import kotlinx.coroutines.CoroutineScope
@@ -231,6 +222,7 @@ private fun CameraIcons(
     )
 
     val cameraContext = ContextCompat.getMainExecutor(LocalContext.current)
+    var isPhotoTaken = false
 
     Canvas(modifier = Modifier
         .size(100.dp)
@@ -242,29 +234,22 @@ private fun CameraIcons(
                     override fun onCaptureSuccess(image: ImageProxy) {
                         super.onCaptureSuccess(image)
 
+                        isPhotoTaken = true
+                        val rotationDegrees = image.imageInfo.rotationDegrees
+                        val rotatedBitmap = image.toBitmap().rotate(rotationDegrees.toFloat())
 
-//                        val matrix = Matrix().apply {
-//                            postRotate(image.imageInfo.rotationDegrees.toFloat())
-//                        }
-//                        val rotatedBitmap = Bitmap.createBitmap(
-//                            image.toBitmap(),
-//                            0,
-//                            0,
-//                            image.width,
-//                            image.height,
-//                            matrix,
-//                            true
-//                        )
-
-                        (viewModel::onTakePhoto)(image.toBitmap())
+                        // Pass the rotatedBitmap to your viewModel or further processing
+                        (viewModel::onTakePhoto)(rotatedBitmap)
                     }
 
                     override fun onError(exception: ImageCaptureException) {
                         super.onError(exception)
                         Log.e("Camera", "Couldn't take photo: ", exception)
+                        isPhotoTaken = false
                     }
                 }
             )
+
         })) {
         val radius = size.minDimension / 2
         val strokeWidth = 10.dp.toPx()
@@ -291,5 +276,19 @@ private fun CameraIcons(
     ) {
         AppRouter.currentScreen.value = Screen.ResultsScreen
     }
+
+
+    if (isPhotoTaken){
+        isPhotoTaken = false
+
+        LaunchedEffect(scaffoldState.snackbarHostState) {
+            /* TODO: snackbar com texto "foto tirada com sucesso" */
+            scaffoldState.snackbarHostState.showSnackbar(
+                "Imagem registrada com sucesso!",
+                duration = SnackbarDuration.Long
+            )
+        }
+    }
+
 
 }
