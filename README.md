@@ -46,7 +46,7 @@ Alternativamente, utilize o instalável .apk para utilizar em um dispositivo mó
 </p>
 
 2. Captura de Imagem:
-    - Utilize a função de câmera para capturar uma imagem de uma cédula brasileira.
+    - Utilize a função de câmera (símbolo (2)) para capturar uma imagem de uma cédula brasileira.
 
 <p align="center">
   <img src="images/nota_5.png" alt="Features do aplicativo" width="200">
