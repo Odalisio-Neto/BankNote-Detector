@@ -1,15 +1,17 @@
 # Detector de Cédulas para Android
 
-<img src="images/nota_5.png" alt="Exemplo de Nota com o aplicativo" width="200">
-
+<p align="center">
+  <img src="images/nota_5.png" alt="Features do aplicativo" width="200">
+</p>
 ## Visão Geral
 
 Este projeto Android tem como objetivo fornecer uma solução conveniente para detectar e classificar as cédulas brasileiras usando a câmera do dispositivo. A aplicação é projetada para identificar e categorizar notas com valores de 2, 5, 10, 20, 50 e 100 reais brasileiros.
 
 A imagem a baixo mostra os features do aplicativo:
 
-<img src="images/camera_features.png" alt="Features do aplicativo" width="200">
-
+<p align="center">
+  <img src="images/camera_features.png" alt="Features do aplicativo" width="200">
+</p>
 ## Recursos
 
 - **Integração de Câmera:** Utiliza a câmera do dispositivo para capturar imagens de cédulas.
@@ -39,14 +41,16 @@ Alternativamente, utilize o instalável .apk para utilizar em um dispositivo mó
 1. Inicio do Aplicativo:
     - Abra o aplicativo Detector de Cédulas em seu dispositivo Android e conceda as permissões necessárias para a completa utilização.
 
-   <img src="images/main_screen.png" alt="Descrição da Imagem" width="200">
-
+  <p align="center">
+  <img src="images/main_screen.png" alt="Features do aplicativo" width="200">
+</p>
 
 2. Captura de Imagem:
     - Utilize a função de câmera para capturar uma imagem de uma cédula brasileira.
 
-<img src="images/nota_5.png" alt="Descrição da Imagem" width="200">
-
+<p align="center">
+  <img src="images/nota_5.png" alt="Features do aplicativo" width="200">
+</p>
 
 3. Visualização do Resultado:
    - Utilize o símbolo (2) marcado na imagem, selecione a imagem a ser analisada e prossiga para realizar a classificação.
@@ -54,21 +58,12 @@ Alternativamente, utilize o instalável .apk para utilizar em um dispositivo mó
 
 ## Exemplo de Uso
 
-1. Captura de Imagem
-   
-<img src="images/nota_5.png" alt="Captura" width="400">
+# Exemplo de Uso
 
-2. Visualização da imagem 
+| 1. Captura de Imagem | 2. Visualização da Imagem | 3. Processamento da Imagem | 4. Resultados |
+|-----------------------|---------------------------|-----------------------------|---------------|
+| <img src="images/nota_5.png" alt="Captura" width="200"> | <img src="images/results_nota_5.png" alt="Visualização" width="200"> | <img src="images/processing_nota_5.png" alt="Processamento" width="200"> | <img src="images/classified_nota_5.png" alt="Resultados" width="200"> |
 
-<img src="images/results_nota_5.png" alt="Visualização" width="200">
-
-3. Processamento da imagem
-
-<img src="images/processing_nota_5.png" alt="Processamento" width="200">
-
-4.  Resultados
-
-<img src="images/classified_nota_5.png" alt="Resultados" width="200">
 
 
 
