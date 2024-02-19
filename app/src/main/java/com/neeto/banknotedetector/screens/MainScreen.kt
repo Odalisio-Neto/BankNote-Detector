@@ -6,6 +6,8 @@
 
     import CameraUsage
     import android.graphics.Bitmap
+    import androidx.compose.foundation.Image
+    import androidx.compose.foundation.layout.Arrangement
     import androidx.compose.foundation.layout.Column
     import androidx.compose.foundation.layout.PaddingValues
     import androidx.compose.foundation.layout.Spacer
@@ -13,6 +15,9 @@
     import androidx.compose.foundation.layout.fillMaxWidth
     import androidx.compose.foundation.layout.height
     import androidx.compose.foundation.layout.padding
+    import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+    import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+    import androidx.compose.foundation.lazy.staggeredgrid.items
     import androidx.compose.material3.BottomSheetScaffold
     import androidx.compose.material3.BottomSheetScaffoldState
     import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,10 +38,12 @@
     import androidx.compose.runtime.setValue
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.platform.LocalContext
+    import androidx.compose.ui.res.painterResource
     import androidx.compose.ui.text.style.TextAlign
     import androidx.compose.ui.unit.dp
     import androidx.lifecycle.viewmodel.compose.viewModel
     import com.google.accompanist.permissions.ExperimentalPermissionsApi
+    import com.neeto.banknotedetector.R
     import com.neeto.banknotedetector.app.MainViewModel
     import com.neeto.banknotedetector.components.PhotoSheetContent
     import com.neeto.banknotedetector.data.Classification
@@ -156,7 +163,7 @@
 
             when (selectedTabIndex) {
                 0 -> {
-
+                    // Conteúdo da Aba 1
                     CameraUsage(paddingValues,
                         scope,
                         scaffoldState,
@@ -165,23 +172,54 @@
                 }
                 1 -> {
                     // Conteúdo da Aba 2
-                    Text(
-                        text = """
-                            Aplicativo organizado como resultado do artigo de detecção de notas bancárias.
-                            Acesso :
-    
-                        """.trimIndent(),
-                        textAlign = TextAlign.Justify,
-                        modifier = Modifier
+                    SobreAplicativo(
+                        Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        paddingValues
                     )
-                    OpenLinkInBrowser()
                 }
             }
         }
     }
 
+    @Composable
+    private fun SobreAplicativo(
+        modifier: Modifier,
+        paddingValues: PaddingValues
+    ) {
+        Column(
+            modifier = modifier.padding(paddingValues)
+        ) {
+            Text(
+                text = "Aplicativo organizado como resultado do artigo de detecção de notas bancárias.",
+                textAlign = TextAlign.Justify,
+            )
+            Image(
+                painter = painterResource(id = R.drawable.smashedbanknote),
+                modifier = Modifier.fillMaxWidth(),
+                contentDescription = "Smashed Banknote"
+            )
 
+            Text(text = "As imagens abaixo mostram alguns exemplos das imagens esperadas")
+            val items = listOf<Int>(R.drawable.note1, R.drawable.note2, R.drawable.note3, R.drawable.note4)
 
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                verticalItemSpacing = 15.dp,
+                contentPadding = PaddingValues(15.dp),
+                modifier = modifier
+            ) {
+                items(items) { item ->
+                    Image(
+                        painter = painterResource(id = item),
+                        contentDescription = "Example Image"
+                    )
+                }
+            }
 
+            Text(text = "Acesso :")
+            OpenLinkInBrowser()
+        }
+    }
