@@ -82,7 +82,7 @@ class TFLiteClassifier(
                     score = category.score
                 )
             }
-        }?.distinctBy { it.name } ?: emptyList()
+        }?: emptyList()
 
         Log.i("CLASSIFIER", "results_list : ${list}")
 

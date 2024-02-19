@@ -29,6 +29,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -65,10 +67,12 @@ fun CameraUsage(
     rotation : Int
 ) {
     val viewModel = viewModel<MainViewModel>()
-    // Camera permission state
     val cameraPermissionState = rememberPermissionState(
         Manifest.permission.CAMERA
     )
+    var flashState = remember{ mutableStateOf(false) }
+    val flashIcon = if (flashState.value) R.drawable.ic_flash_on else R.drawable.ic_flash_off
+
 
     if (cameraPermissionState.status.isGranted) {
 
@@ -78,20 +82,42 @@ fun CameraUsage(
             .padding(paddingValues)
         ) {
 
-            val cameraController = remember{ LifecycleCameraController(contextCamera)
-                .apply {
-                    setEnabledUseCases(
-                        CameraController.IMAGE_CAPTURE
-                    )
+            val cameraController = remember {
+                LifecycleCameraController(contextCamera).apply {
+                    setEnabledUseCases(CameraController.IMAGE_CAPTURE)
 
                 }
             }
+            // Torch Control for each recomposition
+            cameraController.enableTorch(flashState.value)
+
+
+            val lifecycleOwner = LocalLifecycleOwner.current
+
+            // show camera feed in the app
             CameraPreview(
+                lifecycleOwner = lifecycleOwner,
                 controller = cameraController,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
+
+
+
             // if its Portrait orientation
             if(rotation == Surface.ROTATION_0){
+                // Icone de Flash
+                Row(modifier = Modifier
+                    .padding(20.dp),
+
+                ){
+
+                    CameraIcon(drawableId = flashIcon, description = "Flash", sizeButton = 50.dp) {
+                        flashState.value = !flashState.value
+
+                    }
+                }
+                
+                // Demais icones de ação
                 Row (
                     modifier = Modifier
                         .padding(15.dp)
@@ -110,12 +136,23 @@ fun CameraUsage(
 
                 }
             }else{
-                val alignment =  if (rotation == Surface.ROTATION_90) Alignment.CenterEnd else Alignment.CenterStart
+                val alignmentIcons =  if (rotation == Surface.ROTATION_90) Alignment.CenterEnd else Alignment.CenterStart
+                val alignmentFlash = if (rotation == Surface.ROTATION_90) Alignment.BottomStart else Alignment.TopEnd
+
+                Column(modifier = Modifier
+                    .padding(20.dp)
+                    .align(alignmentFlash)
+                    ){
+                    CameraIcon(drawableId = flashIcon, description = "Flash", sizeButton = 50.dp) {
+                        flashState.value = !flashState.value
+                    }
+                }
+
 
                 Column (
                     modifier = Modifier
                         .padding(20.dp)
-                        .align(alignment)
+                        .align(alignmentIcons)
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceAround,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -227,7 +264,6 @@ private fun CameraIcons(
     Canvas(modifier = Modifier
         .size(100.dp)
         .clickable(onClick = {
-
             cameraController.takePicture(
                 cameraContext,
                 object : OnImageCapturedCallback() {
@@ -236,9 +272,10 @@ private fun CameraIcons(
 
                         isPhotoTaken = true
                         val rotationDegrees = image.imageInfo.rotationDegrees
-                        val rotatedBitmap = image.toBitmap().rotate(rotationDegrees.toFloat())
+                        val rotatedBitmap = image
+                            .toBitmap()
+                            .rotate(rotationDegrees.toFloat())
 
-                        // Pass the rotatedBitmap to your viewModel or further processing
                         (viewModel::onTakePhoto)(rotatedBitmap)
                     }
 
@@ -249,6 +286,7 @@ private fun CameraIcons(
                     }
                 }
             )
+
 
         })) {
         val radius = size.minDimension / 2
@@ -292,3 +330,5 @@ private fun CameraIcons(
 
 
 }
+
+

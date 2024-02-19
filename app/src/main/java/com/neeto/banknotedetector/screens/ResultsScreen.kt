@@ -70,7 +70,9 @@ fun ResultsScreen(
                 modifier = Modifier.fillMaxWidth()
 
             ){
-                Button(onClick = { AppRouter.navigateTo(Screen.Home) }) {
+                Button(
+                    onClick = { AppRouter.navigateTo(Screen.Home) }
+                    ) {
                     Text(text = "Return to MAIN SCREEN")
                 }
             }
