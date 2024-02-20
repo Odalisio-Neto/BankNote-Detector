@@ -1,10 +1,9 @@
 # Detector de Cédulas para Android
 
- <center>
   | Tela Principal | Sobre o Aplicativo |
   |----------------|--------------------|
   | <img src="images/nota_5.png" alt="Captura" width="200"> | <img src="images/about_app.png" alt="Visualização" width="200"> |
-</center>
+
 ## Visão Geral
 
 Este projeto Android tem como objetivo fornecer uma solução conveniente para detectar e classificar as cédulas brasileiras usando a câmera do dispositivo. A aplicação é projetada para identificar e categorizar notas com valores de 2, 5, 10, 20, 50 e 100 reais brasileiros.
