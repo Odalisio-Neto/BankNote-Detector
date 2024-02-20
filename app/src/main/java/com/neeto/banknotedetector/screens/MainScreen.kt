@@ -10,11 +10,16 @@
     import androidx.compose.foundation.layout.Arrangement
     import androidx.compose.foundation.layout.Column
     import androidx.compose.foundation.layout.PaddingValues
+    import androidx.compose.foundation.layout.Row
     import androidx.compose.foundation.layout.Spacer
+    import androidx.compose.foundation.layout.aspectRatio
     import androidx.compose.foundation.layout.fillMaxSize
     import androidx.compose.foundation.layout.fillMaxWidth
     import androidx.compose.foundation.layout.height
+    import androidx.compose.foundation.layout.heightIn
     import androidx.compose.foundation.layout.padding
+    import androidx.compose.foundation.layout.size
+    import androidx.compose.foundation.lazy.LazyColumn
     import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
     import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
     import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -36,11 +41,13 @@
     import androidx.compose.runtime.remember
     import androidx.compose.runtime.rememberCoroutineScope
     import androidx.compose.runtime.setValue
+    import androidx.compose.ui.Alignment
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.platform.LocalContext
     import androidx.compose.ui.res.painterResource
     import androidx.compose.ui.text.style.TextAlign
     import androidx.compose.ui.unit.dp
+    import androidx.compose.ui.unit.sp
     import androidx.lifecycle.viewmodel.compose.viewModel
     import com.google.accompanist.permissions.ExperimentalPermissionsApi
     import com.neeto.banknotedetector.R
@@ -173,9 +180,6 @@
                 1 -> {
                     // Conteúdo da Aba 2
                     SobreAplicativo(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
                         paddingValues
                     )
                 }
@@ -185,41 +189,137 @@
 
     @Composable
     private fun SobreAplicativo(
-        modifier: Modifier,
         paddingValues: PaddingValues
     ) {
-        Column(
-            modifier = modifier.padding(paddingValues)
+        val autores = listOf("Odalisio L. S. Neto(1)","Felipe G. Oliveira(2)", "João M. B. Cavalcanti(1)", "José L. S. Pio(1)")
+        val notas = listOf<Int>(R.drawable.note1, R.drawable.note2, R.drawable.note3, R.drawable.note4)
+        
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Aplicativo organizado como resultado do artigo de detecção de notas bancárias.",
-                textAlign = TextAlign.Justify,
-            )
-            Image(
-                painter = painterResource(id = R.drawable.smashedbanknote),
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = "Smashed Banknote"
-            )
+            item {
+                Text(
+                    text = "Aplicativo organizado como resultado do artigo de detecção de notas bancárias.",
+                    textAlign = TextAlign.Justify,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(10.dp)
+                )
+                Text(
+                    text = "Odalisio L. S. Neto(1),Felipe G. Oliveira(2), João M. B. Cavalcanti(1), José L. S. Pio(1).",
+                    textAlign = TextAlign.Justify,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(10.dp)
+                )
 
-            Text(text = "As imagens abaixo mostram alguns exemplos das imagens esperadas")
-            val items = listOf<Int>(R.drawable.note1, R.drawable.note2, R.drawable.note3, R.drawable.note4)
+                Text(
+                    text = "(1) - Instituto de Computação - UFAM, (2) - Instituto de Ciências Exatas e Tecnologia - UFAM",
+                    fontSize = 10.sp,
+                    modifier = Modifier.padding(10.dp)
+                )
+                OpenLinkInBrowser()
 
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalItemSpacing = 15.dp,
-                contentPadding = PaddingValues(15.dp),
-                modifier = modifier
-            ) {
-                items(items) { item ->
-                    Image(
-                        painter = painterResource(id = item),
-                        contentDescription = "Example Image"
+            }
+
+            item {
+                Text(text = "As imagens abaixo mostram alguns exemplos das imagens esperadas",
+                    fontSize = 14.sp,
                     )
+
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalItemSpacing = 2.dp,
+                    contentPadding = PaddingValues(2.dp),
+                    modifier = Modifier.heightIn(max = 200.dp)
+                ) {
+                    items(notas) { item ->
+                        Image(
+                            painter = painterResource(id = item),
+                            contentDescription = "Example Image",
+                            modifier = Modifier.aspectRatio(1f)
+                        )
+                    }
                 }
             }
 
-            Text(text = "Acesso :")
-            OpenLinkInBrowser()
+
+
+
+            item { Text(text = "Oferecimento :", fontSize = 14.sp,
+                modifier = Modifier.padding(5.dp)
+                ) }
+            item {
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround) {
+                    Image(painter = painterResource(id = R.drawable.moto_logo),
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .size(150.dp),
+                        contentDescription = null)
+                    Image(painter = painterResource(id = R.drawable.impact_logo),
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .size(150.dp),
+                        contentDescription = null)
+                }
+
+            }
+
         }
+
+
+
+//        Column(
+//            modifier = Modifier
+//                .padding(paddingValues)
+//                .verticalScroll(
+//                    state = rememberScrollState()
+//                    )
+//        ) {
+//            Text(
+//                text = "Aplicativo organizado como resultado do artigo de detecção de notas bancárias.",
+//                textAlign = TextAlign.Justify,
+//                modifier = Modifier.padding(bottom = 8.dp)
+//            )
+//            Image(
+//                painter = painterResource(id = R.drawable.smashedbanknote),
+//                modifier = Modifier.fillMaxWidth(),
+//                contentDescription = "Smashed Banknote"
+//            )
+//
+//            Text(text = "As imagens abaixo mostram alguns exemplos das imagens esperadas")
+//            val items = listOf<Int>(R.drawable.note1, R.drawable.note2, R.drawable.note3, R.drawable.note4)
+//
+//            LazyVerticalStaggeredGrid(
+//                columns = StaggeredGridCells.Fixed(2),
+//                horizontalArrangement = Arrangement.spacedBy(20.dp),
+//                verticalItemSpacing = 15.dp,
+//                contentPadding = PaddingValues(15.dp),
+////                modifier = modifier
+//            ) {
+//                items(items) { item ->
+//                    Image(
+//                        painter = painterResource(id = item),
+//                        contentDescription = "Example Image"
+//                    )
+//                }
+//            }
+//
+//            Text(text = "Acesso :")
+//            OpenLinkInBrowser()
+//
+//            Text(
+//                text = "Oferecimento :"
+//            )
+//            Column(
+//                modifier = Modifier
+////                    .fillMaxWidth()
+//                    .padding(15.dp)
+//            ) {
+//                Image(painter = painterResource(id = R.drawable.moto_logo), contentDescription = null)
+//                Image(painter = painterResource(id = R.drawable.impact_logo), contentDescription = null)
+//
+//            }
+//        }
     }
