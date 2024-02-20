@@ -1,11 +1,8 @@
 # Detector de Cédulas para Android
 
-<p align="center">
   | Tela Principal | Sobre o Aplicativo |
   |----------------|--------------------|
   | <img src="images/nota_5.png" alt="Captura" width="200"> | <img src="images/about_app.png" alt="Visualização" width="200"> |
-
-</p>
 
 ## Visão Geral
 
@@ -63,11 +60,11 @@ Alternativamente, utilize o instalável .apk para utilizar em um dispositivo mó
 
 # Exemplo de Uso
 
-<p align="center">
+
   | 1. Captura de Imagem | 2. Visualização da Imagem | 3. Processamento da Imagem | 4. Resultados |
   |-----------------------|---------------------------|-----------------------------|---------------|
   | <img src="images/nota_5.png" alt="Captura" width="200"> | <img src="images/results_nota_5.png" alt="Visualização" width="200"> | <img src="images/processing_nota_5.png" alt="Processamento" width="200"> | <img src="images/classified_nota_5.png" alt="Resultados" width="200"> |
-</p>
+
 
 
 
