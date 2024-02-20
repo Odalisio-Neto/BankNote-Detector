@@ -1,8 +1,10 @@
 # Detector de Cédulas para Android
 
-<p align="center">
-  <img src="images/nota_5.png" alt="Features do aplicativo" width="200">
-</p>
+
+| Tela Principal | Sobre o Aplicativo |
+|----------------|--------------------|
+| <img src="images/nota_5.png" alt="Captura" width="200"> | <img src="images/about_app.png" alt="Visualização" width="200"> |
+
 ## Visão Geral
 
 Este projeto Android tem como objetivo fornecer uma solução conveniente para detectar e classificar as cédulas brasileiras usando a câmera do dispositivo. A aplicação é projetada para identificar e categorizar notas com valores de 2, 5, 10, 20, 50 e 100 reais brasileiros.
@@ -12,6 +14,7 @@ A imagem a baixo mostra os features do aplicativo:
 <p align="center">
   <img src="images/camera_features.png" alt="Features do aplicativo" width="200">
 </p>
+
 ## Recursos
 
 - **Integração de Câmera:** Utiliza a câmera do dispositivo para capturar imagens de cédulas.
@@ -26,7 +29,7 @@ Siga estes passos para começar com o projeto Detector de Cédulas:
 
 1. **Clonar o Repositório:**
    ```bash
-   git clone https://github.com/seu-nome-de-usuario/detector-cedulas-android.git
+   git clone https://github.com/Odalisio-Neto/BankNote-Detector.git
    ```
 2. Abrir no Android Studio:
     - **Inicie o Android Studio e abra o projeto clonado.**
@@ -55,8 +58,6 @@ Alternativamente, utilize o instalável .apk para utilizar em um dispositivo mó
 3. Visualização do Resultado:
    - Utilize o símbolo (2) marcado na imagem, selecione a imagem a ser analisada e prossiga para realizar a classificação.
    - Utilize a função (3) para se direcionar para a tela de resultados.
-
-## Exemplo de Uso
 
 # Exemplo de Uso
 
